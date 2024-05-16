@@ -1,7 +1,7 @@
 import streamlit as st
 import openai
 import requests
-from utils.logger import logger
+import logging
 
 # Define your API keys here
 OPENAI_API_KEY = 'your_openai_api_key_here'
@@ -14,7 +14,7 @@ openai.api_key = OPENAI_API_KEY
 st.title("Travel GPT - AI Agent for Travel Destination Queries")
 
 # Disable logger propagation
-logger.propagate = False
+logging.getLogger("python_utils.logger").propagate = False
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -71,7 +71,7 @@ if prompt := st.chat_input("I am a helpful travel bot. Ask me anything about tra
         st.session_state.messages.append({"role": "assistant", "content": summary})
 
     except Exception as e:
-        logger.debug(f"Error: {e}")
+        logging.error(f"Error: {e}")
         if 'insufficient_quota' in str(e):
             message = "I was not able to process the request because the API quota has been exceeded. Please check back later or contact support for assistance."
         else:
